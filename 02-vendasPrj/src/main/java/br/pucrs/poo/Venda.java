@@ -1,7 +1,6 @@
 package br.pucrs.poo;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -24,14 +23,14 @@ public class Venda {
      * @param x - Cliente
      * @throws NullPointerException Se o Cliente não for informado.
      */
-    public Venda(Cliente x) {
-        if (x == null) {
+    public Venda(Cliente cliente) {
+        if (cliente == null) {
             throw new NullPointerException("Cliente não informado!");
         }
-        this.cliente = x;
-        this.dataCriacao = LocalDate.now();
+        this.cliente = cliente;
         Venda.proxNroNF = Venda.proxNroNF + 1;
         this.nroNF = proxNroNF;
+        this.dataCriacao = LocalDate.now();
     }
 
     /**
@@ -107,37 +106,15 @@ public class Venda {
         double total = 0;
 
         for (ItemVenda item : itens) {
-            total += item.ValorTotal();
+            total += item.valorTotal();
         }
         return total;
     }
 
-    /**
-     * Retorna uma Nota Fiscal com todas as informações de uma Venda (Cliente,
-     * Produtos, Valor total, Código da NF e Horário).
-     *
-     * @return Nota Fiscal
-     */
-    public String getNotaFiscal() {
-        if (pagamento == null) {
+    public NotaFiscal emitirNotaFiscal() {
+        if (this.pagamento == null) {
             throw new IllegalStateException("Método de pagamento não informado!");
-        } else {
-            StringBuilder notaFiscal = new StringBuilder();
-            notaFiscal.append(
-                    "Nota Fiscal de Exemplo - POO \t\t\t" + LocalDateTime.now().toLocalTime() + "\t" + nroNF + "\n");
-            notaFiscal.append(
-                    "------------------------------------------------------------------------------------------\n");
-            notaFiscal.append(String.format("CLIENTE: %s \t\t\t\t\t\t QTD PRODS.:", cliente.getCodigo()) + "\n\n");
-
-            for (ItemVenda item : itens) {
-                notaFiscal.append(item.getDetalhes() + "\n");
-            }
-            notaFiscal.append(
-                    "------------------------------------------------------------------------------------------\n");
-            notaFiscal.append("PAGAMENTO: " + pagamento + "\t\t\t\t VALOR TOTAL: R$" + valorTotal() + "\n\n");
-            notaFiscal.append("\t\t\t\t TOTAL À PAGAR: R$" + pagamento.getValor() + "\n");
-
-            return notaFiscal.toString();
         }
+        return new NotaFiscal(nroNF, cliente, itens, valorTotal(), pagamento.getValor(), pagamento.toString());
     }
 }

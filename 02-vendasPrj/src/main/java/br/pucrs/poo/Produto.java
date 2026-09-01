@@ -5,7 +5,7 @@ package br.pucrs.poo;
  *
  * @author Gabriel M. Rostirolla
  */
-public class Produto {
+public abstract class Produto {
 
     private int codigo;
     private String nome;

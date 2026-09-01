@@ -9,16 +9,27 @@ import java.time.LocalDate;
  * @author Gabriel M. Rostirolla
  */
 public class ProdutoEE extends Produto {
-    private int diaGarantia;
+    private int diasGarantia;
 
-    public ProdutoEE(int codigo, String nome, double preco, int diaGarantia) {
+    public ProdutoEE(int codigo, String nome, double preco, int diasGarantia) {
         super(codigo, nome, preco);
 
-        if (diaGarantia <= 0) {
+        if (diasGarantia <= 0) {
             throw new IllegalArgumentException("Prazo de garantia inválido!");
         } else {
-            this.diaGarantia = diaGarantia;
+            this.diasGarantia = diasGarantia;
         }
+    }
+
+    public String getGarantia(LocalDate dataCompra) {
+        if (dataCompra == null) {
+            throw new IllegalArgumentException("A data de compra não pode ser nula!");
+        }
+
+        LocalDate dataVencimento = getValidade(dataCompra);
+
+        return String.format("%s - %d Dias de Garantia - Data Compra: %s - Vencimento: %s",
+                getNome(), this.diasGarantia, dataCompra, dataVencimento);
     }
 
     /**
@@ -32,8 +43,8 @@ public class ProdutoEE extends Produto {
         if (dataVenda == null) {
             throw new IllegalArgumentException("Data inválida!");
         }
-        LocalDate dataAtual = LocalDate.now();
 
+        LocalDate dataAtual = LocalDate.now();
         if (dataAtual.isAfter(getValidade(dataVenda))) {
             return "EXPIRADO";
 
@@ -53,7 +64,7 @@ public class ProdutoEE extends Produto {
         if (dataVenda == null) {
             throw new IllegalArgumentException("Data inválida!");
         } else {
-            return dataVenda.plusDays(diaGarantia);
+            return dataVenda.plusDays(diasGarantia);
         }
     }
 }

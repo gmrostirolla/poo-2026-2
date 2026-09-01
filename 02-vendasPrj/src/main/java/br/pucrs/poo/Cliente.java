@@ -9,32 +9,26 @@ package br.pucrs.poo;
  */
 public abstract class Cliente {
     private String nome;
-    private String codigo;
+    private int codigo;
     // private List<Venda> vendas = new ArrayList<Venda>();
 
-    public Cliente(String nome, String codigo) {
-        if ((codigo == null) && (nome == null)) {
-            throw new NullPointerException("Parâmetros nulos!");
-        } else if ((codigo == null) || (nome == null)) {
-            throw new NullPointerException("Parâmetro(s) nulo(s) !");
+    public Cliente(int codigo, String nome) {
+        if ((codigo == 0) || (nome == null)) {
+            throw new IllegalArgumentException("Parâmetro(s) inválido(s) !");
         }
         this.nome = nome;
         this.codigo = codigo;
-    }
-
-    public Cliente() {
-        this.codigo = "-1";
-        this.nome = "Sem nome";
-
     }
 
     public String getNome() {
         return nome;
     }
 
-    public String getCodigo() {
+    public int getCodigo() {
         return codigo;
     }
+
+    public abstract String getID();
 
     public String toString() {
         return String.format("Nome: %s Código: %s", nome, codigo);

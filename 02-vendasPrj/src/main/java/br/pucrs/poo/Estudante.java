@@ -3,7 +3,7 @@ package br.pucrs.poo;
 public class Estudante extends ClientePF {
     private String instituicao;
 
-    public Estudante(String codigo, String nome, String instituicao, String cpf) {
+    public Estudante(int codigo, String nome, String instituicao, String cpf) {
         super(codigo, nome, cpf);
         this.instituicao = instituicao;
     }

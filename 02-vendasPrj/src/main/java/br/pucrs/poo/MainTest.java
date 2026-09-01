@@ -1,68 +1,170 @@
 package br.pucrs.poo;
 
+import java.time.LocalDate;
+
 public class MainTest {
     public static void main(String[] args) {
-        System.out.println("=== SIMULAÇÃO DE SISTEMA DE VENDAS INICIADA ===\n");
+        ClientePF clientePF = new ClientePF(1, "Gabriel Rostirolla", "06156205071");
+        ClientePJ clientePJ = new ClientePJ(2, "Loja Exemplo LTDA", "12345678000199");
 
-        // 1. Instanciando os objetos básicos (Cliente e Produtos)
-        Cliente cliente = new ClientePF("123", "Gabriel Rostirolla", "06156205071");
+        System.out.println(clientePF);
+        System.out.println(clientePF.getNome());
+        System.out.println(clientePF.getCodigo());
+        System.out.println(clientePF.getCPF());
+        System.out.println(clientePF.getID());
+        System.out.println(clientePJ);
+        System.out.println(clientePJ.getNome());
+        System.out.println(clientePJ.getCodigo());
+        System.out.println(clientePJ.getCNPJ());
+        System.out.println(clientePJ.getID());
 
-        // Criando um Eletrônico com 90 dias de garantia
+        CadastroCliente cadastroCliente = new CadastroCliente();
+        cadastroCliente.cadastrarNovoCliente(clientePF);
+        cadastroCliente.cadastrarNovoCliente(clientePJ);
+        System.out.println(cadastroCliente.totalClientes());
+        System.out.println(cadastroCliente.procuraPorCodigo(1));
+        System.out.println(cadastroCliente.procuraPorCodigo(2));
+        System.out.println(cadastroCliente.procurarPorID("06156205071"));
+        System.out.println(cadastroCliente.procurarPorID("12345678000199"));
+        System.out.println(cadastroCliente.removerPorCodigo(2));
+        System.out.println(cadastroCliente.totalClientes());
+        System.out.println(cadastroCliente.procuraPorCodigo(2));
+
         ProdutoEE smartphone = new ProdutoEE(101, "Smartphone", 3000.0, 90);
+        ProdutoEE notebook = new ProdutoEE(102, "Notebook", 5200.0, 180);
+        ProdutoAlcoolico cerveja = new ProdutoAlcoolico(201, "Cerveja", 15.0);
+        ProdutoAlcoolico vinho = new ProdutoAlcoolico(202, "Vinho", 42.0);
 
-        // Criando um Produto Genérico / Alcoólico para compor o carrinho
-        // (Ajuste o construtor conforme a assinatura real da sua classe Produto)
-        Produto cerveja = new Produto(202, "Cerveja", 15.0) {
-        };
+        System.out.println(smartphone);
+        System.out.println(smartphone.getNome());
+        System.out.println(smartphone.getCodigo());
+        System.out.println(smartphone.getPreco());
+        System.out.println(smartphone.getGarantia(LocalDate.now()));
+        System.out.println(smartphone.getValidade(LocalDate.now()));
+        System.out.println(smartphone.statusGarantia(LocalDate.now()));
+        System.out.println(notebook.getGarantia(LocalDate.now().minusDays(120)));
+        System.out.println(cerveja);
+        System.out.println(cerveja.getNome());
+        System.out.println(cerveja.getCodigo());
+        System.out.println(cerveja.getPreco());
+        System.out.println(cerveja.getTarifa());
+        System.out.println(vinho.getPreco());
+        cerveja.setTarifa(0.5);
+        vinho.setTarifa(0.2);
+        System.out.println(cerveja.getTarifa());
+        System.out.println(vinho.getTarifa());
+        System.out.println(cerveja.getPreco());
+        System.out.println(vinho.getPreco());
 
-        // 2. Criando a Venda (Fluxo Realista: começa apenas com o cliente)
-        Venda venda = new Venda(cliente);
+        CadastroProdutos cadastroProdutos = new CadastroProdutos();
+        cadastroProdutos.cadastrarNovoProduto(smartphone);
+        cadastroProdutos.cadastrarNovoProduto(notebook);
+        cadastroProdutos.cadastrarNovoProduto(cerveja);
+        cadastroProdutos.cadastrarNovoProduto(vinho);
+        System.out.println(cadastroProdutos.totalClientes());
+        System.out.println(cadastroProdutos.procuraPorCodigo(101));
+        System.out.println(cadastroProdutos.procuraPorCodigo(202));
+        System.out.println(cadastroProdutos.removerPorCodigo(102));
+        System.out.println(cadastroProdutos.totalClientes());
+        System.out.println(cadastroProdutos.procuraPorCodigo(102));
 
-        // 3. Inserindo os itens no carrinho
-        venda.inserirProduto(1, smartphone); // R$ 3000.0
-        venda.inserirProduto(2, cerveja); // R$ 30.0 (15.0 * 2)
+        ItemVenda itemSmartphone = new ItemVenda(smartphone, 1);
+        ItemVenda itemCerveja = new ItemVenda(cerveja, 2);
+        ItemVenda itemVinho = new ItemVenda(vinho, 3);
+        System.out.println(itemSmartphone.valorUnitario());
+        System.out.println(itemSmartphone.valorTotal());
+        System.out.println(itemSmartphone.getDetalhes());
+        System.out.println(itemCerveja.valorUnitario());
+        System.out.println(itemCerveja.valorTotal());
+        System.out.println(itemCerveja.getDetalhes());
+        System.out.println(itemVinho.valorUnitario());
+        System.out.println(itemVinho.valorTotal());
+        System.out.println(itemVinho.getDetalhes());
 
-        System.out.println("-> Produtos inseridos com sucesso.");
-        System.out.println("-> Valor Bruto do Carrinho: R$ " + venda.valorTotal() + "\n");
+        Venda vendaCartao = new Venda(clientePF);
+        vendaCartao.inserirProduto(itemSmartphone);
+        vendaCartao.inserirProduto(2, cerveja);
+        vendaCartao.inserirProduto(vinho);
+        System.out.println(vendaCartao.dataCriacao());
+        System.out.println(vendaCartao.verificarGarantia(smartphone));
+        System.out.println(vendaCartao.verificarGarantia(notebook));
+        System.out.println(vendaCartao.valorTotal());
 
-        // 4. Testando a Lógica de Garantia do Eletrônico
-        System.out.println("=== TESTE DE GARANTIA ===");
-        System.out.println("Data da Compra: " + venda.dataCriacao());
-        System.out.println("Vencimento da Garantia: " + smartphone.getValidade(venda.dataCriacao()));
-        System.out.println("Status atual da garantia: " + venda.verificarGarantia(smartphone));
-        System.out.println("-------------------------------------------------\n");
+        Pagamento pagamentoCartao = new PagamentoCartao(vendaCartao.valorTotal(), "1234123412341234", 4);
+        System.out.println(pagamentoCartao.getValor());
+        System.out.println(pagamentoCartao.processar());
+        System.out.println(pagamentoCartao.getValor());
+        System.out.println(pagamentoCartao.toString());
+        vendaCartao.definirMetodoPagamento(pagamentoCartao);
+        System.out.println(vendaCartao.emitirNotaFiscal().montarNotaFiscal());
 
-        // 5. Testando os Fluxos de Pagamento (Escolha UM cenário descomentando as
-        // linhas)
+        Venda vendaPix = new Venda(clientePJ);
+        vendaPix.inserirProduto(1, notebook);
+        vendaPix.inserirProduto(2, vinho);
+        System.out.println(vendaPix.valorTotal());
 
-        System.out.println("=== PROCESSANDO O PAGAMENTO ===");
+        Pagamento pagamentoPix = new PagamentoPIX(vendaPix.valorTotal(), "chave-pix-exemplo@teste.com");
+        System.out.println(pagamentoPix.getValor());
+        System.out.println(pagamentoPix.processar());
+        System.out.println(pagamentoPix.getValor());
+        System.out.println(pagamentoPix.toString());
+        vendaPix.definirMetodoPagamento(pagamentoPix);
+        System.out.println(vendaPix.emitirNotaFiscal().montarNotaFiscal());
 
-        // CENÁRIO A: Testando pagamento via PIX (Espera-se 10% de desconto)
-        double valorBruto = venda.valorTotal();
-        Pagamento formaPagamento = new PagamentoCartao(valorBruto, "1234123412341234", 3);
+        Venda vendaBoleto = new Venda(clientePF);
+        vendaBoleto.inserirProduto(3, smartphone);
+        vendaBoleto.inserirProduto(itemCerveja);
+        System.out.println(vendaBoleto.valorTotal());
 
-        // CENÁRIO B: Testando pagamento via CARTÃO (Descomente para testar)
-        // 4 parcelas aplica 5% de juros. 16 dígitos simulando o mascaramento.
-        // Pagamento formaPagamento = new PagamentoCartao(valorBruto,
-        // "1234567890123456", 4);
+        Pagamento pagamentoBoleto = new PagamentoBoleto(vendaBoleto.valorTotal(),
+                "34191.79001 01043.513184 91020.150008 7 900000000000");
+        System.out.println(pagamentoBoleto.getValor());
+        System.out.println(pagamentoBoleto.processar());
+        System.out.println(pagamentoBoleto.getValor());
+        System.out.println(pagamentoBoleto.toString());
+        vendaBoleto.definirMetodoPagamento(pagamentoBoleto);
+        System.out.println(vendaBoleto.emitirNotaFiscal().montarNotaFiscal());
 
-        // CENÁRIO C: Testando pagamento via BOLETO (Descomente para testar)
-        // Pagamento formaPagamento = new PagamentoBoleto(valorBruto, "34191.79001
-        // 01043.513184 91020.150008 7 900000000000");
+        try {
+            new ClientePF(0, null, null);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
-        // Executando o processamento do pagamento
-        if (formaPagamento.processar()) {
-            System.out.println("-> Pagamento PROCESSADO com sucesso!");
+        try {
+            new ProdutoEE(0, null, -1.0, 0);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
-            // Injetando o pagamento já processado de volta na venda
-            venda.definirMetodoPagamento(formaPagamento);
+        try {
+            new ItemVenda(null, 0);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
-            // 6. Emitindo a Nota Fiscal Final
-            System.out.println("\n=== EMISSÃO DE NOTA FISCAL ===");
-            System.out.println(venda.getNotaFiscal());
+        try {
+            new PagamentoCartao(0.0, "1234", 0);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
-        } else {
-            System.out.println("⚠️ Falha grave: O pagamento foi recusado!");
+        try {
+            new PagamentoBoleto(10.0, "");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            vendaCartao.definirMetodoPagamento(null);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            new Venda(null);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 }

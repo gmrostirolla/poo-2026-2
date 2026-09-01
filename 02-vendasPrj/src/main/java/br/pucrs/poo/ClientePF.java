@@ -3,7 +3,7 @@ package br.pucrs.poo;
 public class ClientePF extends Cliente {
     private String cpf;
 
-    public ClientePF(String codigo, String nome, String cpf) {
+    public ClientePF(int codigo, String nome, String cpf) {
         super(codigo, nome);
         this.cpf = cpf;
     }
@@ -12,8 +12,8 @@ public class ClientePF extends Cliente {
         return cpf;
     }
 
-    public ClientePF() {
-        this.cpf = "-1";
+    public String getID() {
+        return this.cpf;
     }
 
     @Override

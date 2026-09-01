@@ -13,6 +13,9 @@ public class PagamentoBoleto extends Pagamento {
     }
 
     public boolean processar() {
+        if (codigoBarras == null || codigoBarras.isBlank()) {
+            throw new IllegalArgumentException("Código de barras inválido");
+        }
         return true;
     }
 

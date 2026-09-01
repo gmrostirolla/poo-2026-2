@@ -7,30 +7,27 @@ package br.pucrs.poo;
  * @author Gabriel M. Rostirolla
  */
 public class ProdutoAlcoolico extends Produto {
-    // (indo de 0.0 - 1.0)
-    private static double tarifaAlcool;
+    private double impostoAlcool;
 
     public ProdutoAlcoolico(int codigoProduto, String nomeProduto, double precoProduto) {
         super(codigoProduto, nomeProduto, precoProduto);
-        if (getNome().toLowerCase().contains("corote")) {
-            tarifaAlcool = 4;
-        }
+        this.impostoAlcool = 1.0;
     }
 
     public double getTarifa() {
-        return tarifaAlcool;
+        return impostoAlcool;
     }
 
-    public void serTarifa(double tarifa) {
-        if (tarifa > 1.0 || tarifa < 0.0) {
+    public void setTarifa(double tarifa) {
+        if (tarifa > 5.0 || tarifa < 0.0) {
             throw new ExceptionInInitializerError("Valor de tarifa inválido");
         } else {
-            tarifaAlcool = tarifa;
+            impostoAlcool = tarifa;
         }
     }
 
     @Override
     public double getPreco() {
-        return (tarifaAlcool * super.getPreco());
+        return super.getPreco() + (impostoAlcool * super.getPreco());
     }
 }

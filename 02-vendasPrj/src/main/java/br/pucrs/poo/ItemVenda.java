@@ -25,7 +25,7 @@ public class ItemVenda {
      *
      * @return Preço de um Produto.
      */
-    public double ValorUnitario() {
+    public double valorUnitario() {
         return (produto.getPreco());
     }
 
@@ -34,7 +34,7 @@ public class ItemVenda {
      *
      * @return Valor total de um ItemProduto.
      */
-    public double ValorTotal() {
+    public double valorTotal() {
         return (quantidade * produto.getPreco());
     }
 
@@ -46,6 +46,6 @@ public class ItemVenda {
      */
     public String getDetalhes() {
         return String.format("(%d) %s \t\t\t\t\t\t\t %d x %.2f", produto.getCodigo(), produto.getNome(), quantidade,
-                ValorUnitario());
+                valorUnitario());
     }
 }
